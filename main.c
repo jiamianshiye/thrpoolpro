@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
         }
         sleep(1);
     }
+    ThrPoolHandleDeInit(&tpHdl);
     return 0;
 }
 

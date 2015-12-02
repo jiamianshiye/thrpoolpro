@@ -29,7 +29,7 @@ struct ThrPoolHandle{
                     -1 failed
 */
 int ThrPoolHandleInit(struct ThrPoolHandle *pHdl);
-
+int ThrPoolHandleDeInit(struct ThrPoolHandle *pHdl);
 
 int ThrPoolObjWake(struct ThrPoolHandle *pHdl, int index, void *Tsk, void *Arg);
 

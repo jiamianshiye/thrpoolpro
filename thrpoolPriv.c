@@ -76,13 +76,14 @@ int ThrPoolHandleDeInit(struct ThrPoolHandle *pHdl)
 
     for(i = 0; i < pHdl->thr_nums; i++){
         pObj = &pHdl->pthr_arr[i];
+        pthread_cancel(pObj->thr_id);
         pthread_mutex_destroy(&pObj->thr_mutex);
         pthread_cond_destroy(&pObj->thr_cond);
-        pthread_cancel(pObj->thr_id);
+
     }
     pHdl->thr_nums = 0;
     free(pHdl->pthr_arr);
-
+    printf("%s | Thr Pool Deinit !\n", __func__);
     return 0;
 }
 
