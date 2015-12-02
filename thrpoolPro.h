@@ -31,11 +31,14 @@ struct ThrPoolHandle{
 int ThrPoolHandleInit(struct ThrPoolHandle *pHdl);
 int ThrPoolHandleDeInit(struct ThrPoolHandle *pHdl);
 
+/*
+    Wake up the index threads in pHdl, run by tsk and arg.
+*/
 int ThrPoolObjWake(struct ThrPoolHandle *pHdl, int index, void *Tsk, void *Arg);
 
 /*
     Get a free thr tsk
-    return value : free tsk index
+    return value : the index of free tsk, used by ThrPoolObjWake
 */
 int ThrPoolSched(struct ThrPoolHandle *pHdl);
 #ifdef __cplusplus
