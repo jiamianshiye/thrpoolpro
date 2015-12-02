@@ -5,6 +5,11 @@
 #include "thrpoolPriv.h"
 #include "thrpoolPro.h"
 
+void MsgPrint(void *msg)
+{
+    printf("%s\n", (char *)msg);
+}
+
 int main(int argc, char *argv[])
 {
     struct ThrPoolHandle tpHdl;
@@ -16,8 +21,25 @@ int main(int argc, char *argv[])
     tpHdl.thr_nums = atoi((char *)argv[1]);
     ThrPoolHandleInit(&tpHdl);
 
-    while(1)
-        sleep(10);
+    char *msg = "Hello world !";
+    int index;
+    int counts = 10;
+    while(counts--){
+        sleep(1);
+        index = ThrPoolSched(&tpHdl);
+        if(index >= 0){
+            ThrPoolObjWake(&tpHdl, index, &MsgPrint, msg);
+        }
+        index = ThrPoolSched(&tpHdl);
+        if(index >= 0){
+            ThrPoolObjWake(&tpHdl, index, &MsgPrint, msg);
+        }
+        index = ThrPoolSched(&tpHdl);
+        if(index >= 0){
+            ThrPoolObjWake(&tpHdl, index, &MsgPrint, msg);
+        }
+        sleep(1);
+    }
     return 0;
 }
 

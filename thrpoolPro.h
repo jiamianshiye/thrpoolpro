@@ -7,18 +7,19 @@ extern "C"{
 
 #include <pthread.h>
 
+typedef void (*Func)(void *);
 struct ThrObj{
     pthread_t  thr_id;
     pthread_mutex_t thr_mutex;
     pthread_cond_t thr_cond;
     int thr_status;
-    void *thr_tsk;
+    Func thr_tsk;
     void *thr_arg;
 };
 
 struct ThrPoolHandle{
     int thr_nums;
-    struct ThrObj *pThrArr;
+    struct ThrObj *pthr_arr;
 };
 
 /*
@@ -28,6 +29,15 @@ struct ThrPoolHandle{
                     -1 failed
 */
 int ThrPoolHandleInit(struct ThrPoolHandle *pHdl);
+
+
+int ThrPoolObjWake(struct ThrPoolHandle *pHdl, int index, void *Tsk, void *Arg);
+
+/*
+    Get a free thr tsk
+    return value : free tsk index
+*/
+int ThrPoolSched(struct ThrPoolHandle *pHdl);
 #ifdef __cplusplus
 }
 #endif
