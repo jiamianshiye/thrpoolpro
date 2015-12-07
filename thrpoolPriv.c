@@ -53,7 +53,7 @@ int ThrPoolHandleInit(struct ThrPoolHandle *pHdl)
 {
     struct ThrObj *pObj = NULL;
     int i = 0;
-    int ret;
+    int ret = 0;
     pthread_attr_t attr;
     struct sched_param schedParam;
 
