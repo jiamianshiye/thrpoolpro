@@ -12,6 +12,11 @@ struct ThrObj{
     pthread_t  thr_id;
     pthread_mutex_t thr_mutex;
     pthread_cond_t thr_cond;
+/*
+minsize = 16*1024 Bytes.
+If this value is 0, then this thread will be set default size 8192KBytes. Or other size checked by : ulimit -s.
+*/
+    int thr_stkSize;
     int thr_status;
     Func thr_tsk;
     void *thr_arg;
@@ -19,6 +24,11 @@ struct ThrObj{
 
 struct ThrPoolHandle{
     int thr_nums;
+/*
+minsize = 16*1024 Bytes.
+If this value is 0, then this thread will be set default size 8192KBytes. Or other size checked by : ulimit -s.
+*/
+    int thr_stkSize;
     struct ThrObj *pthr_arr;
 };
 
