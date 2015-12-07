@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include <pthread.h>
 
 #include "thrpoolPriv.h"
@@ -20,7 +21,6 @@ static void ThrObjExec(void *pArg)
 
         pObj->thr_tsk(pObj->thr_arg);
 
-
         pthread_mutex_unlock(&pObj->thr_mutex);
     }
 
@@ -29,13 +29,24 @@ static void ThrObjExec(void *pArg)
 static int ThrObjInit(struct ThrObj *pObj)
 {
     int ret = 0;
+    pthread_attr_t					attr;
+
+    pthread_attr_init(&attr);
     pthread_mutex_init(&pObj->thr_mutex, NULL);
     pthread_cond_init(&pObj->thr_cond, NULL);
     pObj->thr_status = THR_STATE_FREE;
     pObj->thr_tsk = NULL;
     pObj->thr_arg = NULL;
-    if((ret = pthread_create(&pObj->thr_id, NULL, (void *)ThrObjExec, (void *)pObj)) < 0){
+    if(pObj->thr_stkSize > 16*1024){
+        if((ret = pthread_attr_setstacksize(&attr, pObj->thr_stkSize)) < 0){
+            printf("%s | Set thread stack size failed!\n", __func__);
+            pObj->thr_status = THR_STATE_FAIL;
+            return -1;
+        }
+    }
+    if((ret = pthread_create(&pObj->thr_id, &attr, (void *)ThrObjExec, (void *)pObj)) < 0){
         printf("%s | Create thread Obj failed!\n", __func__);
+        pObj->thr_status = THR_STATE_FAIL;
         return -1;
     }else{
         pthread_detach(pObj->thr_id);
@@ -64,6 +75,7 @@ int ThrPoolHandleInit(struct ThrPoolHandle *pHdl)
 
     for(i = 0; i < pHdl->thr_nums; i++){
         pObj = &pHdl->pthr_arr[i];
+        pObj->thr_stkSize = pHdl->thr_stkSize;
         ThrObjInit(pObj);
     }
 

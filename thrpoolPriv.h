@@ -6,6 +6,7 @@ extern "C"{
 //Max threads in pool
 #define     MAX_THR_POOL_OBJS   (32)
 
+#define     THR_STATE_FAIL      (-1) // thr create failed
 #define     THR_STATE_FREE      (0) // free
 #define     THR_STATE_BUSY      (1) // occupied
 

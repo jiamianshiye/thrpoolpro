@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
     memset(&tpHdl, 0, sizeof(struct ThrPoolHandle));
     tpHdl.thr_nums = atoi((char *)argv[1]);
+    tpHdl.thr_stkSize = 2*1024*1024;
     ThrPoolHandleInit(&tpHdl);
 
     char *msg = "Hello world !";
