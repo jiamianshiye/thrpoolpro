@@ -25,7 +25,7 @@ If this value is 0, then this thread will be set default size 8192KBytes. Or oth
 */
     int thr_stkSize;
 /*
-    Thread priority, 0-99;
+    Thread priority, 0-99; default value is 98
 */
     int thr_stkPri;
 
