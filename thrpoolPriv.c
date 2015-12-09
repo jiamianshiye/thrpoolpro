@@ -31,9 +31,9 @@ static int ThrObjInit(struct ThrObj *pObj, pthread_attr_t *pAttr)
 {
     int ret = 0;
 
-    pthread_attr_init(pAttr);
     pthread_mutex_init(&pObj->thr_mutex, NULL);
     pthread_cond_init(&pObj->thr_cond, NULL);
+
     pObj->thr_status = THR_STATE_FREE;
     pObj->thr_tsk = NULL;
     pObj->thr_arg = NULL;
