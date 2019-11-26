@@ -1,4 +1,4 @@
-OBJ=main
+OBJ=thrMain
 
 sources = *.c
 CC=gcc
