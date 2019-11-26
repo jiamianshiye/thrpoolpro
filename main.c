@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     tpHdl.thr_stkPri = 99;
     ThrPoolHandleInit(&tpHdl);
 
-    char *msg = "Hello world !";
+    char *msg = "Hello , The suck world !";
     int index;
     int counts = 10;
     while(counts--){
