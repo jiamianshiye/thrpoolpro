@@ -30,6 +30,7 @@ If this value is 0, then this thread will be set default size 8192KBytes. Or oth
     int thr_stkPri;
 
     struct ThrObj *pthr_arr;
+    pthread_mutex_t sched_mutex;
 };
 
 /*
@@ -51,6 +52,7 @@ int ThrPoolObjWake(struct ThrPoolHandle *pHdl, int index, void *Tsk, void *Arg);
     return value : the index of free tsk, used by ThrPoolObjWake
 */
 int ThrPoolSched(struct ThrPoolHandle *pHdl);
+int ThrPoolPushWait(struct ThrPoolHandle *pHdl, void *Tsk, void *Arg);
 #ifdef __cplusplus
 }
 #endif

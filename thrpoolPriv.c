@@ -62,7 +62,7 @@ int ThrPoolHandleInit(struct ThrPoolHandle *pHdl)
         return -1;
     }
     if(pHdl->thr_nums > MAX_THR_POOL_OBJS){
-        printf("%s | Wrong thread numbers !\n", __func__);
+        printf("%s | Too much threads, Max support numbers %d!\n", __func__, MAX_THR_POOL_OBJS);
         return -1;
     }
     if(pHdl->thr_nums <= 0){
@@ -93,6 +93,8 @@ int ThrPoolHandleInit(struct ThrPoolHandle *pHdl)
         pObj = &pHdl->pthr_arr[i];
         ThrObjInit(pObj, &attr);
     }
+
+    pthread_mutex_init(&pObj->thr_mutex, NULL);
 
     return 0;
 }
@@ -153,3 +155,46 @@ int ThrPoolSched(struct ThrPoolHandle *pHdl)
     }
     return i == pHdl->thr_nums ? -1 : i;
 }
+/*
+	Sched and exec
+*/
+int ThrPoolPushWait(struct ThrPoolHandle *pHdl, void *Tsk, void *Arg)
+{
+    int i = 0;
+	int index = -1;
+    struct ThrObj *pObj;
+	int retry = 5;
+
+	pthread_mutex_lock(&pHdl->sched_mutex);
+	while(retry--)
+	{
+		for(i = 0; i < pHdl->thr_nums; i++){
+			pObj = &pHdl->pthr_arr[i];
+			if(pObj->thr_status == THR_STATE_BUSY)
+				continue;
+			else if(pObj->thr_status == THR_STATE_FREE)
+				break;
+		}
+		usleep(100*1000);
+    }
+    if(index = (i == pHdl->thr_nums ? -1 : i) < 0)
+	{
+		printf("No idle threads in %d retrys!\n", retry);
+    	pthread_mutex_unlock(&pHdl->sched_mutex);
+		return -1;	
+	}
+	
+    pObj = &pHdl->pthr_arr[index];
+    pthread_mutex_lock(&pObj->thr_mutex);
+    pObj->thr_tsk = Tsk;
+    pObj->thr_arg = Arg;
+    pObj->thr_status = THR_STATE_BUSY;
+    pthread_cond_signal(&pObj->thr_cond);
+    pthread_mutex_unlock(&pObj->thr_mutex);
+
+    pthread_mutex_unlock(&pHdl->sched_mutex);
+
+	return 0;
+}
+
+

@@ -2,26 +2,18 @@ OBJ=thrMain
 
 sources = *.c
 CC=gcc
+#CC=aarch64-linux-gnu-gcc
 
 LDFLAGS+=-lpthread
 
 
-all: $(OBJ)
+all:$(OBJ)
+	
+
 $(OBJ): main.o thrpoolPriv.o
-	$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS) -g
 
 clean:
 	rm *.o
 	rm ./$(OBJ)
-	rm *.d
 
-
-
-
-include $(sources:.c=.d)
-%.d:%.c
-	set -e; rm -f $@; \
-	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
-	rm *.d
